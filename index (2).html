@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>RotaViva — Inteligência preditiva de mobilidade urbana</title>
+<meta name="description" content="Não é sobre prever a chuva. É sobre garantir que o Rio não para quando ela chega. Acesso institucional por avaliação." />
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet">
+
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+<script>
+  tailwind.config = {
+    theme: { extend: {
+      fontFamily: { mono: ['"DM Mono"','ui-monospace','monospace'], display: ['"Syne"','ui-sans-serif'] },
+      colors: {
+        ink: { 900:'#06080B', 800:'#0A0D12', 700:'#10141B', 600:'#161B24' },
+        acid: { 400:'#C8FF3E', 500:'#A6E22E' },
+        rain: { 400:'#5BB8FF', 500:'#2E8DFF' },
+        alert: { 400:'#FF6B4A' }
+      }
+    }}
+  }
+</script>
+
+<style>
+  html, body { background:#06080B; color:#E6EAF0; }
+  body { font-family:'DM Mono',monospace; -webkit-font-smoothing:antialiased; }
+  .font-display { font-family:'Syne',sans-serif; letter-spacing:-0.02em; }
+  .tech-grid {
+    background-image: linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+  .glow-acid { box-shadow: 0 0 0 1px rgba(200,255,62,0.25), 0 0 60px -10px rgba(200,255,62,0.45); }
+  .text-glow-acid { text-shadow: 0 0 24px rgba(200,255,62,0.45); }
+  html { scroll-behavior: smooth; }
+  .marker-alert { width:14px; height:14px; border-radius:9999px; background:#FF6B4A; border:2px solid #fff; box-shadow:0 0 0 4px rgba(255,107,74,0.25); }
+  .marker-bus { width:10px; height:10px; border-radius:9999px; background:#C8FF3E; border:2px solid #06080B; box-shadow:0 0 0 3px rgba(200,255,62,0.25); }
+  .leaflet-tooltip-dark { background:#10141B; color:#C8FF3E; border:1px solid rgba(200,255,62,0.3); font-family:'DM Mono'; font-size:11px; }
+  .leaflet-tooltip-dark::before { display:none; }
+  .hairline { height:1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.15), transparent); }
+</style>
+</head>
+<body class="bg-ink-900 text-gray-100 selection:bg-acid-400 selection:text-ink-900">
+
+<!-- NAV -->
+<header class="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-ink-900/70 border-b border-white/5">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+    <a href="rotaviva.html" class="flex items-center gap-2">
+      <div class="w-8 h-8 rounded-md bg-acid-400 flex items-center justify-center">
+        <svg viewBox="0 0 24 24" class="w-5 h-5 text-ink-900" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12l4-8 4 5 4-3 6 9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <span class="font-display font-bold text-xl tracking-tight">RotaViva</span>
+    </a>
+    <nav class="hidden md:flex items-center gap-8 text-sm text-gray-300">
+      <a href="#assimetria" class="hover:text-acid-400 transition">A assimetria</a>
+      <a href="#dentro" class="hover:text-acid-400 transition">Quem está dentro</a>
+      <a href="contato.html" class="hover:text-acid-400 transition">Contato</a>
+    </nav>
+    <a href="solicitar-acesso.html" class="hidden md:inline-flex items-center gap-2 bg-acid-400 hover:bg-acid-500 text-ink-900 font-semibold text-sm px-4 py-2 rounded-md transition">
+      Solicitar avaliação
+      <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    </a>
+  </div>
+</header>
+
+<!-- HERO -->
+<section class="relative pt-32 pb-24 overflow-hidden">
+  <div class="absolute inset-0 tech-grid opacity-60"></div>
+  <div class="absolute -top-20 -right-20 w-[600px] h-[600px] bg-acid-400/10 blur-[140px] rounded-full"></div>
+  <div class="absolute top-40 -left-40 w-[500px] h-[500px] bg-rain-500/10 blur-[140px] rounded-full"></div>
+
+  <div class="relative max-w-7xl mx-auto px-6 grid lg:grid-cols-12 gap-12 items-center">
+    <div class="lg:col-span-7">
+      <div class="inline-flex items-center gap-2 text-xs uppercase tracking-[0.2em] text-acid-400 border border-acid-400/30 rounded-full px-3 py-1 mb-6">
+        <span class="relative flex w-2 h-2">
+          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-acid-400 opacity-75"></span>
+          <span class="relative inline-flex rounded-full h-2 w-2 bg-acid-400"></span>
+        </span>
+        Acesso institucional · 2026
+      </div>
+
+      <h1 class="font-display font-extrabold text-4xl sm:text-5xl lg:text-6xl leading-[1.05] tracking-tight">
+        Não é sobre <span class="text-rain-400">prever a chuva</span>.<br/>
+        É sobre garantir que <span class="text-acid-400 text-glow-acid">o Rio não para</span><br/>
+        quando ela chega.
+      </h1>
+
+      <p class="mt-6 text-gray-300 max-w-xl text-base sm:text-lg leading-relaxed">
+        Inteligência preditiva de mobilidade urbana, operada por um número limitado de cidades e parceiros. Quem opera com RotaViva, antecipa. Quem não opera, reage.
+      </p>
+
+      <div class="mt-8 flex flex-wrap gap-3">
+        <a href="solicitar-acesso.html" class="inline-flex items-center gap-2 bg-acid-400 hover:bg-acid-500 text-ink-900 font-semibold px-5 py-3 rounded-md transition glow-acid">
+          Solicitar avaliação
+          <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        <a href="contato.html" class="inline-flex items-center gap-2 border border-white/15 hover:border-white/40 text-white px-5 py-3 rounded-md transition">
+          Falar com o founder
+        </a>
+      </div>
+
+      <div class="mt-10 text-xs uppercase tracking-[0.25em] text-gray-500">
+        Operações fechadas · Avaliamos cada candidatura · 2026 com lista limitada
+      </div>
+    </div>
+
+    <!-- Mapa -->
+    <div class="lg:col-span-5">
+      <div class="relative rounded-xl border border-white/10 bg-ink-700/50 backdrop-blur p-3 shadow-2xl">
+        <div class="flex items-center justify-between mb-3 text-xs text-gray-400 px-1">
+          <div class="flex items-center gap-2">
+            <span class="w-2 h-2 rounded-full bg-alert-400 animate-pulse"></span>
+            Zona Sul · 18:42 · risco severo
+          </div>
+          <span class="text-acid-400 text-[10px] uppercase tracking-widest">live</span>
+        </div>
+        <div id="map" class="w-full h-[360px] rounded-lg overflow-hidden ring-1 ring-white/10"></div>
+        <div class="mt-3 grid grid-cols-3 gap-2 text-[11px]">
+          <div class="rounded-md bg-ink-800/80 border border-white/5 p-2">
+            <div class="text-gray-500 uppercase tracking-wider">Risco</div>
+            <div class="text-alert-400 font-semibold">ALTO · 0.87</div>
+          </div>
+          <div class="rounded-md bg-ink-800/80 border border-white/5 p-2">
+            <div class="text-gray-500 uppercase tracking-wider">Chuva</div>
+            <div class="text-rain-400 font-semibold">38 mm/h</div>
+          </div>
+          <div class="rounded-md bg-ink-800/80 border border-white/5 p-2">
+            <div class="text-gray-500 uppercase tracking-wider">ETA bloqueio</div>
+            <div class="text-acid-400 font-semibold">+27 min</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ASSIMETRIA — o que ninguém mais vê -->
+<section id="assimetria" class="py-24 relative bg-ink-800/40 border-y border-white/5">
+  <div class="absolute inset-0 tech-grid opacity-30"></div>
+  <div class="relative max-w-7xl mx-auto px-6">
+    <div class="text-xs uppercase tracking-[0.3em] text-acid-400 mb-3">// A assimetria</div>
+    <h2 class="font-display text-3xl sm:text-4xl font-bold max-w-3xl">O resto do mercado vê o que já aconteceu. Nossos parceiros veem o que vai acontecer.</h2>
+
+    <div class="mt-12 grid md:grid-cols-2 gap-6">
+      <div class="rounded-xl border border-white/10 bg-ink-700/30 p-8">
+        <div class="text-xs uppercase tracking-[0.2em] text-gray-500 mb-4">Sem RotaViva</div>
+        <ul class="space-y-4 text-gray-400">
+          <li class="flex gap-3"><span class="text-alert-400">✕</span> Resposta reativa · ônibus já está parado quando alguém percebe.</li>
+          <li class="flex gap-3"><span class="text-alert-400">✕</span> Decisão por intuição em sala de crise.</li>
+          <li class="flex gap-3"><span class="text-alert-400">✕</span> Rotas críticas tratadas iguais às de baixo risco.</li>
+          <li class="flex gap-3"><span class="text-alert-400">✕</span> Custo de paralisação absorvido pela operação.</li>
+        </ul>
+      </div>
+      <div class="rounded-xl border border-acid-400/40 bg-gradient-to-br from-acid-400/10 to-transparent p-8 glow-acid">
+        <div class="text-xs uppercase tracking-[0.2em] text-acid-400 mb-4">Com RotaViva</div>
+        <ul class="space-y-4 text-gray-200">
+          <li class="flex gap-3"><span class="text-acid-400">→</span> Antecedência operacional — você decide antes de o evento começar.</li>
+          <li class="flex gap-3"><span class="text-acid-400">→</span> Decisão por evidência, não por achismo.</li>
+          <li class="flex gap-3"><span class="text-acid-400">→</span> Rotas tratadas pelo risco real, em tempo real.</li>
+          <li class="flex gap-3"><span class="text-acid-400">→</span> Custo de paralisação convertido em vantagem competitiva.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="hairline my-16"></div>
+
+    <!-- Os números, sem explicar -->
+    <div class="grid sm:grid-cols-3 gap-8 text-center">
+      <div>
+        <div class="font-display text-6xl font-extrabold text-acid-400 text-glow-acid">868×</div>
+        <div class="mt-3 text-sm text-gray-400">o tamanho do problema que poucos enxergam.</div>
+      </div>
+      <div>
+        <div class="font-display text-6xl font-extrabold text-white">30 min</div>
+        <div class="mt-3 text-sm text-gray-400">a janela que separa quem antecipa de quem reage.</div>
+      </div>
+      <div>
+        <div class="font-display text-6xl font-extrabold text-rain-400">12 mil+</div>
+        <div class="mt-3 text-sm text-gray-400">eventos reais. Calibração que ninguém mais tem.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QUEM ESTÁ DENTRO -->
+<section id="dentro" class="py-24 relative">
+  <div class="max-w-7xl mx-auto px-6">
+    <div class="text-xs uppercase tracking-[0.3em] text-acid-400 mb-3">// Quem está dentro</div>
+    <h2 class="font-display text-3xl sm:text-4xl font-bold max-w-3xl">A lógica do RotaViva já foi endossada por quem opera a cidade.</h2>
+
+    <div class="mt-12 grid lg:grid-cols-3 gap-5">
+      <article class="rounded-xl border border-white/10 bg-ink-700/40 p-7 relative">
+        <div class="absolute top-4 right-4 text-acid-400/20 font-display text-7xl leading-none">"</div>
+        <div class="text-xs uppercase tracking-[0.2em] text-acid-400 mb-3">Subsecretário · SMTR</div>
+        <p class="text-gray-200 leading-relaxed">
+          A lógica de detecção de anomalias proposta endereça uma lacuna real do sistema atual.
+        </p>
+        <div class="mt-6 pt-4 border-t border-white/5 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-acid-400 to-rain-500 flex items-center justify-center font-display font-bold text-ink-900">LS</div>
+          <div>
+            <div class="font-semibold text-sm">Lauro Silvestre</div>
+            <div class="text-xs text-gray-400">Subsecretário, SMTR · Prefeitura do Rio</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="rounded-xl border border-white/10 bg-ink-700/40 p-7 relative">
+        <div class="absolute top-4 right-4 text-rain-400/20 font-display text-7xl leading-none">"</div>
+        <div class="text-xs uppercase tracking-[0.2em] text-rain-400 mb-3">Validação técnica · SMTR</div>
+        <p class="text-gray-200 leading-relaxed">
+          Dá visibilidade a desvios de rota que hoje são invisíveis ao sistema de monitoramento.
+        </p>
+        <div class="mt-6 pt-4 border-t border-white/5 flex items-center gap-3">
+          <div class="w-10 h-10 rounded-full bg-gradient-to-br from-rain-400 to-acid-400 flex items-center justify-center font-display font-bold text-ink-900">JD</div>
+          <div>
+            <div class="font-semibold text-sm">Janaína Duarte</div>
+            <div class="text-xs text-gray-400">Equipe técnica, SMTR</div>
+          </div>
+        </div>
+      </article>
+
+      <article class="rounded-xl border border-acid-400/30 bg-gradient-to-br from-acid-400/10 to-transparent p-7">
+        <div class="text-xs uppercase tracking-[0.2em] text-acid-400 mb-3">Apoio internacional</div>
+        <p class="text-gray-200 leading-relaxed">
+          Selecionado para apoio do <strong class="text-white">International Climate Initiative (IKI)</strong> e do <strong class="text-white">ITDP Brasil</strong>. Replicabilidade prevista no programa <strong class="text-acid-400">ACCESS</strong> (€20M · 6 países LATAM).
+        </p>
+        <div class="mt-6 pt-4 border-t border-white/10 grid grid-cols-3 gap-3 text-center">
+          <div><div class="font-display font-bold text-acid-400">IKI</div><div class="text-[10px] text-gray-400 uppercase tracking-wider">Climate</div></div>
+          <div><div class="font-display font-bold text-white">ITDP</div><div class="text-[10px] text-gray-400 uppercase tracking-wider">Brasil</div></div>
+          <div><div class="font-display font-bold text-rain-400">ACCESS</div><div class="text-[10px] text-gray-400 uppercase tracking-wider">€20M</div></div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- PARA QUEM -->
+<section class="py-24 relative bg-ink-800/40 border-y border-white/5">
+  <div class="absolute inset-0 tech-grid opacity-30"></div>
+  <div class="relative max-w-7xl mx-auto px-6">
+    <div class="text-xs uppercase tracking-[0.3em] text-acid-400 mb-3">// Para quem</div>
+    <h2 class="font-display text-3xl sm:text-4xl font-bold max-w-3xl">Trabalhamos com quem entende o custo de cada minuto parado.</h2>
+
+    <div class="mt-12 grid lg:grid-cols-3 gap-5">
+      <div class="rounded-xl border border-white/10 bg-ink-700/40 p-7 hover:border-acid-400/40 transition">
+        <div class="font-display text-xl font-bold">Centros de operação urbana</div>
+        <p class="mt-3 text-sm text-gray-400">COR e equivalentes. Gestão de crise climática com vantagem temporal sobre o evento.</p>
+      </div>
+      <div class="rounded-xl border border-acid-400/40 bg-gradient-to-br from-acid-400/10 to-transparent p-7 lg:scale-[1.02] lg:-translate-y-1 shadow-xl">
+        <div class="inline-flex items-center gap-2 text-[10px] uppercase tracking-[0.25em] text-acid-400 bg-acid-400/10 border border-acid-400/40 rounded-full px-2 py-1 mb-3">Lista de espera</div>
+        <div class="font-display text-xl font-bold">Operadoras de transporte</div>
+        <p class="mt-3 text-sm text-gray-300">Decisão preventiva de frota. Quem opera com RotaViva ganha um trimestre de vantagem por estação chuvosa.</p>
+        <a href="solicitar-acesso.html" class="mt-5 inline-flex items-center gap-2 text-acid-400 hover:text-white text-sm font-semibold transition">
+          Entrar na fila →
+        </a>
+      </div>
+      <div class="rounded-xl border border-white/10 bg-ink-700/40 p-7 hover:border-rain-400/40 transition">
+        <div class="font-display text-xl font-bold">Seguradoras &amp; corporações</div>
+        <p class="mt-3 text-sm text-gray-400">Modelagem de risco climático urbano para precificação dinâmica e decisão de capital.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- AUTORIDADE / MOAT — sem explicar como -->
+<section class="py-24 relative">
+  <div class="absolute top-1/2 -left-40 w-[600px] h-[600px] bg-acid-400/5 blur-[160px] rounded-full"></div>
+  <div class="relative max-w-5xl mx-auto px-6 text-center">
+    <div class="text-xs uppercase tracking-[0.3em] text-acid-400 mb-4">// Por que isso é difícil</div>
+    <h2 class="font-display text-3xl sm:text-4xl font-bold leading-tight">
+      Construir o RotaViva exigiu acesso, calibração e validação que <span class="text-acid-400">não estão à venda</span>.
+    </h2>
+    <p class="mt-6 text-gray-400 max-w-2xl mx-auto">
+      Por isso não competimos por feature. Competimos por posição. Quem entra agora, entra antes do mercado descobrir que precisa.
+    </p>
+
+    <div class="mt-12 flex flex-wrap justify-center gap-3 text-xs">
+      <span class="px-4 py-2 rounded-full border border-white/10 bg-ink-700/40 text-gray-300">Dado bruto que ninguém tem</span>
+      <span class="px-4 py-2 rounded-full border border-white/10 bg-ink-700/40 text-gray-300">Calibração com 12 mil eventos reais</span>
+      <span class="px-4 py-2 rounded-full border border-white/10 bg-ink-700/40 text-gray-300">Endosso institucional já firmado</span>
+      <span class="px-4 py-2 rounded-full border border-white/10 bg-ink-700/40 text-gray-300">Replicabilidade LATAM já estruturada</span>
+    </div>
+  </div>
+</section>
+
+<!-- CTA FINAL -->
+<section class="py-24 relative overflow-hidden bg-ink-800/40 border-y border-white/5">
+  <div class="absolute inset-0 tech-grid opacity-40"></div>
+  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[400px] bg-acid-400/10 blur-[160px] rounded-full"></div>
+
+  <div class="relative max-w-4xl mx-auto px-6 text-center">
+    <div class="text-xs uppercase tracking-[0.3em] text-acid-400 mb-4">// Próximo passo</div>
+    <h2 class="font-display text-4xl sm:text-5xl font-extrabold leading-tight">
+      A próxima chuva forte é uma <span class="text-acid-400 text-glow-acid">questão de quando</span>.
+    </h2>
+    <p class="mt-6 text-gray-300 max-w-xl mx-auto">
+      Operações fechadas em 2026. Avaliamos cada candidatura individualmente.
+    </p>
+    <div class="mt-10 flex flex-wrap justify-center gap-3">
+      <a href="solicitar-acesso.html" class="inline-flex items-center gap-2 bg-acid-400 hover:bg-acid-500 text-ink-900 font-semibold px-6 py-3 rounded-md transition glow-acid">
+        Solicitar avaliação
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M5 12h14M13 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </a>
+      <a href="contato.html" class="inline-flex items-center gap-2 border border-white/15 hover:border-white/40 text-white px-6 py-3 rounded-md transition">
+        Falar com o founder
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="border-t border-white/5 py-10 bg-ink-900">
+  <div class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-500">
+    <div class="flex items-center gap-2">
+      <div class="w-6 h-6 rounded-md bg-acid-400 flex items-center justify-center">
+        <svg viewBox="0 0 24 24" class="w-4 h-4 text-ink-900" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12l4-8 4 5 4-3 6 9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <span class="font-display font-bold text-white">RotaViva</span>
+      <span>· © 2026</span>
+    </div>
+    <div class="flex gap-6">
+      <a href="solicitar-acesso.html" class="hover:text-acid-400">Solicitar avaliação</a>
+      <a href="contato.html" class="hover:text-acid-400">Contato institucional</a>
+      <a href="mailto:davi@sebrads.com" class="hover:text-acid-400">davi@sebrads.com</a>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const map = L.map('map', { zoomControl:false, attributionControl:false, scrollWheelZoom:false, dragging:false }).setView([-22.9519,-43.2105], 12);
+  L.tileLayer('https://cartodb-basemaps-{s}.global.ssl.fastly.net/dark_all/{z}/{x}/{y}.png', { subdomains:'abcd', maxZoom:19 }).addTo(map);
+  const alertas = [
+    { lat:-22.9711, lng:-43.1822, label:'Av. Niemeyer · risco 0.92' },
+    { lat:-22.9519, lng:-43.2105, label:'Túnel Rebouças · risco 0.87' },
+    { lat:-22.9035, lng:-43.1785, label:'Centro · risco 0.74' },
+  ];
+  alertas.forEach(a => {
+    L.marker([a.lat,a.lng], { icon: L.divIcon({ className:'', html:'<div class="marker-alert"></div>', iconSize:[14,14], iconAnchor:[7,7] }) }).addTo(map).bindTooltip(a.label, { className:'leaflet-tooltip-dark' });
+  });
+  const onibus = [[-22.9620,-43.1955],[-22.9408,-43.1894],[-22.9120,-43.2305],[-22.9755,-43.2294],[-22.9332,-43.1685],[-22.9854,-43.2105]];
+  onibus.forEach(p => L.marker(p, { icon: L.divIcon({ className:'', html:'<div class="marker-bus"></div>', iconSize:[10,10], iconAnchor:[5,5] }) }).addTo(map));
+  L.polyline([[-22.9711,-43.1822],[-22.9620,-43.1955],[-22.9519,-43.2105],[-22.9408,-43.1894],[-22.9035,-43.1785]], { color:'#FF6B4A', weight:3, opacity:0.7, dashArray:'6 6' }).addTo(map);
+</script>
+</body>
+</html>

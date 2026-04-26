@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Contato institucional — RotaViva</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+
+<script>
+  tailwind.config = { theme: { extend: {
+    fontFamily: { mono:['"DM Mono"','monospace'], display:['"Syne"','sans-serif'] },
+    colors: { ink:{900:'#06080B',800:'#0A0D12',700:'#10141B',600:'#161B24'}, acid:{400:'#C8FF3E',500:'#A6E22E'}, rain:{400:'#5BB8FF'}, alert:{400:'#FF6B4A'} }
+  }}}
+</script>
+<style>
+  html, body { background:#06080B; color:#E6EAF0; }
+  body { font-family:'DM Mono',monospace; }
+  .font-display { font-family:'Syne',sans-serif; letter-spacing:-0.02em; }
+  .tech-grid {
+    background-image: linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+  .glow-acid { box-shadow: 0 0 0 1px rgba(200,255,62,0.25), 0 0 60px -10px rgba(200,255,62,0.45); }
+  .text-glow-acid { text-shadow: 0 0 24px rgba(200,255,62,0.45); }
+</style>
+</head>
+<body class="bg-ink-900">
+
+<!-- NAV -->
+<header class="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-ink-900/70 border-b border-white/5">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+    <a href="rotaviva.html" class="flex items-center gap-2">
+      <div class="w-8 h-8 rounded-md bg-acid-400 flex items-center justify-center">
+        <svg viewBox="0 0 24 24" class="w-5 h-5 text-ink-900" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12l4-8 4 5 4-3 6 9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <span class="font-display font-bold text-xl tracking-tight text-white">RotaViva</span>
+    </a>
+    <a href="rotaviva.html" class="text-sm text-gray-400 hover:text-acid-400 transition">← voltar</a>
+  </div>
+</header>
+
+<section class="relative pt-32 pb-24 overflow-hidden min-h-screen">
+  <div class="absolute inset-0 tech-grid opacity-50"></div>
+  <div class="absolute -top-20 -left-20 w-[500px] h-[500px] bg-acid-400/10 blur-[140px] rounded-full"></div>
+  <div class="absolute bottom-0 right-0 w-[400px] h-[400px] bg-rain-400/10 blur-[140px] rounded-full"></div>
+
+  <div class="relative max-w-5xl mx-auto px-6">
+
+    <div class="text-xs uppercase tracking-[0.3em] text-acid-400 mb-4">// Contato institucional</div>
+    <h1 class="font-display font-extrabold text-4xl sm:text-5xl lg:text-6xl leading-[1.05] tracking-tight max-w-3xl">
+      Linha direta com <span class="text-acid-400 text-glow-acid">o founder</span>.
+    </h1>
+    <p class="mt-6 text-gray-300 max-w-2xl text-lg">
+      Conversas estratégicas — investidores, instituições, operadoras e imprensa — chegam diretamente em mim.
+    </p>
+
+    <!-- Card founder -->
+    <div class="mt-16 grid lg:grid-cols-12 gap-8">
+      <div class="lg:col-span-7 rounded-2xl border border-acid-400/30 bg-gradient-to-br from-acid-400/10 to-transparent p-10 glow-acid">
+        <div class="flex items-start gap-6">
+          <div class="w-20 h-20 rounded-full bg-gradient-to-br from-acid-400 to-rain-400 flex items-center justify-center font-display font-bold text-3xl text-ink-900 shrink-0">
+            DS
+          </div>
+          <div class="flex-1">
+            <div class="text-xs uppercase tracking-[0.25em] text-acid-400 mb-2">Founder · Diretor de Negócios</div>
+            <div class="font-display text-3xl font-bold text-white">Davi Sebrads</div>
+            <p class="mt-3 text-gray-300 leading-relaxed">
+              Responsável por relações institucionais, parcerias estratégicas e fechamento comercial da RotaViva.
+            </p>
+
+            <div class="hairline mt-8 mb-8" style="height:1px;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.15),transparent);"></div>
+
+            <a href="mailto:davi@sebrads.com" class="inline-flex items-center gap-3 group">
+              <div class="w-10 h-10 rounded-md bg-ink-800 border border-white/10 flex items-center justify-center group-hover:border-acid-400/40 transition">
+                <svg class="w-5 h-5 text-acid-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 8l9 6 9-6M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              </div>
+              <div>
+                <div class="text-[10px] uppercase tracking-[0.25em] text-gray-500">E-mail institucional</div>
+                <div class="font-display text-xl font-semibold text-white group-hover:text-acid-400 transition">davi@sebrads.com</div>
+              </div>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Direcionamentos -->
+      <div class="lg:col-span-5 space-y-4">
+        <a href="solicitar-acesso.html" class="block rounded-xl border border-white/10 bg-ink-700/40 p-6 hover:border-acid-400/40 transition group">
+          <div class="text-[10px] uppercase tracking-[0.25em] text-acid-400 mb-2">Para parceiros &amp; clientes</div>
+          <div class="font-display text-xl font-semibold text-white group-hover:text-acid-400 transition">Solicitar avaliação →</div>
+          <p class="mt-2 text-sm text-gray-400">Operadoras, COR, seguradoras: caminho formal de candidatura.</p>
+        </a>
+
+        <a href="mailto:davi@sebrads.com?subject=Investidor%20%C2%B7%20RotaViva" class="block rounded-xl border border-white/10 bg-ink-700/40 p-6 hover:border-acid-400/40 transition group">
+          <div class="text-[10px] uppercase tracking-[0.25em] text-rain-400 mb-2">Para investidores &amp; editais</div>
+          <div class="font-display text-xl font-semibold text-white group-hover:text-rain-400 transition">Linha direta →</div>
+          <p class="mt-2 text-sm text-gray-400">Material institucional sob solicitação. Resposta em 48h.</p>
+        </a>
+
+        <a href="mailto:davi@sebrads.com?subject=Imprensa%20%C2%B7%20RotaViva" class="block rounded-xl border border-white/10 bg-ink-700/40 p-6 hover:border-acid-400/40 transition group">
+          <div class="text-[10px] uppercase tracking-[0.25em] text-gray-400 mb-2">Para imprensa</div>
+          <div class="font-display text-xl font-semibold text-white group-hover:text-white transition">Pedido de entrevista →</div>
+          <p class="mt-2 text-sm text-gray-400">Atendimento por agendamento.</p>
+        </a>
+      </div>
+    </div>
+
+    <!-- Localização -->
+    <div class="mt-16 flex flex-wrap gap-6 text-sm text-gray-400">
+      <div class="flex items-center gap-2"><span class="text-acid-400">●</span> Rio de Janeiro · Brasil</div>
+      <div class="flex items-center gap-2"><span class="text-acid-400">●</span> Operações em expansão · LATAM</div>
+      <div class="flex items-center gap-2"><span class="text-acid-400">●</span> Atendimento institucional · seg–sex</div>
+    </div>
+
+  </div>
+</section>
+
+<footer class="border-t border-white/5 py-10 bg-ink-900">
+  <div class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-500">
+    <div class="flex items-center gap-2">
+      <span class="font-display font-bold text-white">RotaViva</span><span>· © 2026</span>
+    </div>
+    <div class="flex gap-6">
+      <a href="rotaviva.html" class="hover:text-acid-400">Início</a>
+      <a href="solicitar-acesso.html" class="hover:text-acid-400">Solicitar avaliação</a>
+      <a href="mailto:davi@sebrads.com" class="hover:text-acid-400">davi@sebrads.com</a>
+    </div>
+  </div>
+</footer>
+</body>
+</html>

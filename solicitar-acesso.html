@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Solicitar avaliação — RotaViva</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&family=Syne:wght@500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+
+<script>
+  tailwind.config = { theme: { extend: {
+    fontFamily: { mono:['"DM Mono"','monospace'], display:['"Syne"','sans-serif'] },
+    colors: { ink:{900:'#06080B',800:'#0A0D12',700:'#10141B',600:'#161B24'}, acid:{400:'#C8FF3E',500:'#A6E22E'}, rain:{400:'#5BB8FF',500:'#2E8DFF'}, alert:{400:'#FF6B4A'} }
+  }}}
+</script>
+<style>
+  html, body { background:#06080B; color:#E6EAF0; }
+  body { font-family:'DM Mono',monospace; }
+  .font-display { font-family:'Syne',sans-serif; letter-spacing:-0.02em; }
+  .tech-grid {
+    background-image: linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 48px 48px;
+  }
+  .glow-acid { box-shadow: 0 0 0 1px rgba(200,255,62,0.25), 0 0 60px -10px rgba(200,255,62,0.45); }
+  .text-glow-acid { text-shadow: 0 0 24px rgba(200,255,62,0.45); }
+  input, select, textarea { background:#10141B; border:1px solid rgba(255,255,255,0.1); color:#E6EAF0; border-radius:6px; padding:12px 14px; font-family:'DM Mono'; font-size:14px; outline:none; transition:all .2s; width:100%; }
+  input:focus, select:focus, textarea:focus { border-color:#C8FF3E; box-shadow:0 0 0 3px rgba(200,255,62,0.15); }
+  label { font-size:11px; text-transform:uppercase; letter-spacing:0.18em; color:#9CA3AF; margin-bottom:8px; display:block; }
+</style>
+</head>
+<body class="bg-ink-900">
+
+<!-- NAV -->
+<header class="fixed top-0 left-0 right-0 z-50 backdrop-blur-md bg-ink-900/70 border-b border-white/5">
+  <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+    <a href="rotaviva.html" class="flex items-center gap-2">
+      <div class="w-8 h-8 rounded-md bg-acid-400 flex items-center justify-center">
+        <svg viewBox="0 0 24 24" class="w-5 h-5 text-ink-900" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M3 12l4-8 4 5 4-3 6 9" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </div>
+      <span class="font-display font-bold text-xl tracking-tight text-white">RotaViva</span>
+    </a>
+    <a href="rotaviva.html" class="text-sm text-gray-400 hover:text-acid-400 transition">← voltar</a>
+  </div>
+</header>
+
+<section class="relative pt-32 pb-24 overflow-hidden min-h-screen">
+  <div class="absolute inset-0 tech-grid opacity-50"></div>
+  <div class="absolute -top-20 right-0 w-[500px] h-[500px] bg-acid-400/10 blur-[140px] rounded-full"></div>
+
+  <div class="relative max-w-6xl mx-auto px-6 grid lg:grid-cols-12 gap-12">
+
+    <!-- Lado esquerdo: posicionamento -->
+    <aside class="lg:col-span-5">
+      <div class="text-xs uppercase tracking-[0.3em] text-acid-400 mb-4">// Acesso por avaliação</div>
+      <h1 class="font-display font-extrabold text-4xl sm:text-5xl leading-[1.05] tracking-tight">
+        Não vendemos para todo mundo. <span class="text-acid-400 text-glow-acid">Por isso vale a pena estar dentro.</span>
+      </h1>
+      <p class="mt-6 text-gray-300 leading-relaxed">
+        Operamos com lista fechada. Cada candidatura passa por avaliação técnica e estratégica antes da liberação.
+      </p>
+
+      <div class="mt-12 space-y-6">
+        <div class="flex gap-4">
+          <div class="font-display text-3xl font-bold text-acid-400">01</div>
+          <div>
+            <div class="font-display font-semibold text-white">Você envia o pedido</div>
+            <div class="text-sm text-gray-400 mt-1">Formulário ao lado. 2 minutos.</div>
+          </div>
+        </div>
+        <div class="flex gap-4">
+          <div class="font-display text-3xl font-bold text-acid-400">02</div>
+          <div>
+            <div class="font-display font-semibold text-white">Avaliação interna</div>
+            <div class="text-sm text-gray-400 mt-1">Resposta em até 5 dias úteis.</div>
+          </div>
+        </div>
+        <div class="flex gap-4">
+          <div class="font-display text-3xl font-bold text-acid-400">03</div>
+          <div>
+            <div class="font-display font-semibold text-white">Conversa com o founder</div>
+            <div class="text-sm text-gray-400 mt-1">Se houver fit, agendamos uma reunião direta.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="mt-12 p-5 rounded-xl border border-white/10 bg-ink-700/40">
+        <div class="text-[10px] uppercase tracking-[0.25em] text-gray-500">Linha direta</div>
+        <a href="mailto:davi@sebrads.com" class="font-display text-lg font-semibold text-white hover:text-acid-400 transition">davi@sebrads.com</a>
+        <div class="text-xs text-gray-400 mt-1">Davi Sebrads · Founder &amp; Diretor de Negócios</div>
+      </div>
+    </aside>
+
+    <!-- Lado direito: formulário -->
+    <div class="lg:col-span-7">
+      <form class="rounded-xl border border-white/10 bg-ink-700/30 p-8 space-y-5" onsubmit="event.preventDefault(); document.getElementById('form-success').classList.remove('hidden'); this.style.display='none'; window.scrollTo({top:0, behavior:'smooth'});">
+
+        <div>
+          <label>Perfil</label>
+          <select required>
+            <option value="">selecione…</option>
+            <option>Operadora de transporte</option>
+            <option>Centro de operações urbanas / órgão público</option>
+            <option>Seguradora</option>
+            <option>Investidor / Fundo</option>
+            <option>Imprensa</option>
+            <option>Outro</option>
+          </select>
+        </div>
+
+        <div class="grid sm:grid-cols-2 gap-5">
+          <div>
+            <label>Nome completo</label>
+            <input type="text" required placeholder="Seu nome" />
+          </div>
+          <div>
+            <label>Cargo</label>
+            <input type="text" required placeholder="Ex: Diretor de Operações" />
+          </div>
+        </div>
+
+        <div class="grid sm:grid-cols-2 gap-5">
+          <div>
+            <label>Instituição / Empresa</label>
+            <input type="text" required placeholder="Razão social" />
+          </div>
+          <div>
+            <label>Cidade de operação</label>
+            <input type="text" required placeholder="Ex: Rio de Janeiro" />
+          </div>
+        </div>
+
+        <div class="grid sm:grid-cols-2 gap-5">
+          <div>
+            <label>E-mail institucional</label>
+            <input type="email" required placeholder="voce@instituicao.gov.br" />
+          </div>
+          <div>
+            <label>Telefone (opcional)</label>
+            <input type="tel" placeholder="+55 21 ..." />
+          </div>
+        </div>
+
+        <div>
+          <label>O que motivou seu contato?</label>
+          <textarea rows="4" placeholder="Conte brevemente o problema que você quer resolver."></textarea>
+        </div>
+
+        <div class="flex items-start gap-3 pt-2">
+          <input type="checkbox" required class="mt-1 w-4 h-4" style="width:16px; height:16px;" />
+          <span class="text-xs text-gray-400">Concordo com o contato da equipe RotaViva por e-mail e entendo que esta candidatura passa por avaliação prévia.</span>
+        </div>
+
+        <button type="submit" class="w-full mt-3 bg-acid-400 hover:bg-acid-500 text-ink-900 font-semibold py-3.5 rounded-md transition glow-acid">
+          Enviar candidatura
+        </button>
+      </form>
+
+      <div id="form-success" class="hidden rounded-xl border border-acid-400/40 bg-acid-400/10 p-8 text-center">
+        <div class="font-display text-3xl font-bold text-acid-400 text-glow-acid">Recebido.</div>
+        <p class="mt-4 text-gray-300">Sua candidatura entrou na fila de avaliação.</p>
+        <p class="mt-2 text-sm text-gray-400">Resposta em até 5 dias úteis. Para urgências, escreva direto:</p>
+        <a href="mailto:davi@sebrads.com" class="mt-4 inline-block font-display font-semibold text-white hover:text-acid-400 transition">davi@sebrads.com</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer class="border-t border-white/5 py-10 bg-ink-900">
+  <div class="max-w-7xl mx-auto px-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-500">
+    <div class="flex items-center gap-2">
+      <span class="font-display font-bold text-white">RotaViva</span><span>· © 2026</span>
+    </div>
+    <div class="flex gap-6">
+      <a href="rotaviva.html" class="hover:text-acid-400">Início</a>
+      <a href="contato.html" class="hover:text-acid-400">Contato</a>
+      <a href="mailto:davi@sebrads.com" class="hover:text-acid-400">davi@sebrads.com</a>
+    </div>
+  </div>
+</footer>
+</body>
+</html>
